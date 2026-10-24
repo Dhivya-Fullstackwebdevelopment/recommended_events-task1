@@ -195,4 +195,29 @@ export default function App() {
         <main aria-busy={state.status === 'loading'}>
           <div className="mb-4 flex items-baseline justify-between">
             <h2 className="font-display text-2xl font-bold text-maroon-dark">Recommended for you</h2>
-            {state.status === 'ready' && <p className="rounded-full bg-cream px-3 py-1 text-sm font-semibold text-maroon" aria-live="polite">{state.events.length} event{state.events.length !== 1 && '
+            {state.status === 'ready' && <p className="rounded-full bg-cream px-3 py-1 text-sm font-semibold text-maroon" aria-live="polite">{state.events.length} event{state.events.length !== 1 && 's'}</p>}
+          </div>
+          {state.status === 'loading' && <Skeleton />}
+          {state.status === 'error' && (
+            <Notice tone="error" title={state.error.status === 400 ? 'Those filters are not valid' : 'We could not load events'}
+              action={<button onClick={state.error.status === 400 ? reset : () => setRetry((n) => n + 1)} className={`mt-4 ${BTN}`}>{state.error.status === 400 ? 'Reset filters' : 'Try again'}</button>}>
+              <p>{state.error.message}</p>
+              {state.error.details?.length > 0 && <ul className="mt-2 text-sm">{state.error.details.map((d) => <li key={d}>{d}</li>)}</ul>}
+            </Notice>
+          )}
+          {state.status === 'ready' && state.events.length === 0 && (
+            <Notice title="No events match yet" action={<button onClick={reset} className={`mt-4 ${BTN}`}>Clear filters</button>}>
+              <p>Try a wider date range, another format, or remove a technology filter. New events are added regularly.</p>
+            </Notice>
+          )}
+          {state.status === 'ready' && state.events.length > 0 && (
+            <div className="space-y-5">
+              {interests.length === 0 && <p className="rounded-xl bg-cream p-3 text-sm">No interests selected, so events are sorted by start date. Pick an interest to personalise the ranking.</p>}
+              {state.events.map((e, i) => <EventCard key={e.id} e={e} rank={i + 1} hasInterests={interests.length > 0} />)}
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}

@@ -72,4 +72,7 @@ export async function mockRequest(path, params = {}) {
     .filter((e) => !params.category || e.category === params.category)
     .filter((e) => !params.format || (params.format === 'online') === e.isOnline)
     .filter((e) => !params.dateRange || params.dateRange === 'all' || new Date(e.startsAt) - now <= DATE_DAYS[params.dateRange] * 864e5)
-    .map((e) => ({ ...e, ...score(e, interests, n
+    .map((e) => ({ ...e, ...score(e, interests, now) }))
+    .sort((a, b) => b.score - a.score || new Date(a.startsAt) - new Date(b.startsAt));
+  return { data: rows, meta: { total: rows.length } };
+}

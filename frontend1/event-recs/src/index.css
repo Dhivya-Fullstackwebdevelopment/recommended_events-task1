@@ -19,4 +19,5 @@ body {
 }
 :focus-visible { outline: 3px solid var(--color-gold); outline-offset: 2px; }
 @keyframes shimmer { to { background-position: -200% 0; } }
-.skeleton { background: linear-gradient(90deg,#e8d9b9 25%,#f6ecd7 50%,#e8d9b9 75%); backgrou
+.skeleton { background: linear-gradient(90deg,#e8d9b9 25%,#f6ecd7 50%,#e8d9b9 75%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } * { transition: none !important; } }
