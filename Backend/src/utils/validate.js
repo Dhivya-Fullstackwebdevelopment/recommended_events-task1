@@ -3,7 +3,6 @@ const ApiError = require("./ApiError");
 const INTEREST_RE = /^[\w .+#/-]+$/;
 const FORMATS = ["online", "in-person"];
 const DATE_RANGES = ["week", "month", "quarter", "all"];
-const LEVELS = ["Beginner", "Intermediate", "Advanced"];
 
 // Returns the parsed interests array or throws a 400 with details.
 function validateRecommendationQuery(q, { technologies, categories }) {
@@ -24,7 +23,7 @@ function validateRecommendationQuery(q, { technologies, categories }) {
 }
 
 // Mirrors the frontend's registration.js (the backend must validate again).
-function validateRegistration(f) {
+function validateRegistration(f, levels = []) {
   const e = {};
   const name = String(f.fullName || "").trim();
   if (name.length < 2 || name.length > 80 || !/^[\p{L} .'-]+$/u.test(name)) e.fullName = "Enter your full name (2-80 letters).";
@@ -32,7 +31,7 @@ function validateRegistration(f) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 120) e.email = "Enter a valid email, like name@example.com.";
   const phone = String(f.phone || "").trim();
   if (phone && !/^\+?[0-9 -]{7,15}$/.test(phone)) e.phone = "Use 7-15 digits. Spaces, - and a leading + are allowed.";
-  if (!LEVELS.includes(f.experience)) e.experience = "Choose your experience level.";
+  if (!levels.includes(f.experience)) e.experience = "Choose your experience level.";
   if (f.consent !== true) e.consent = "Please agree to receive event updates.";
   return e;
 }

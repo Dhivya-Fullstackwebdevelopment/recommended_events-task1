@@ -1,6 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const Event = require("./models/Event");
+const { Technology, Category, ExperienceLevel } = require("./models/lookups");
 const Registration = require("./models/Registration");
 const { Counter } = require("./models/Counter");
 
@@ -30,9 +31,15 @@ const EVENTS = [
 
 (async () => {
   await mongoose.connect(process.env.MONGO_URL);
-  await Promise.all([Event.deleteMany({}), Registration.deleteMany({}), Counter.deleteMany({})]);
+  await Promise.all([Event.deleteMany({}), Registration.deleteMany({}), Counter.deleteMany({}), Technology.deleteMany({}), Category.deleteMany({}), ExperienceLevel.deleteMany({})]);
   await Event.insertMany(EVENTS);
+
+  // Dropdown collections: { id, name }
+  const toDocs = (list) => list.map((name, i) => ({ id: i + 1, name }));
+  await Technology.insertMany(toDocs([...new Set(EVENTS.flatMap((e) => e.skills))].sort()));
+  await Category.insertMany(toDocs([...new Set(EVENTS.map((e) => e.category))].sort()));
+  await ExperienceLevel.insertMany(toDocs(["Beginner", "Intermediate", "Advanced"]));
   await Registration.syncIndexes();
-  console.log(`Seeded ${EVENTS.length} events`);
+  console.log(`Seeded ${EVENTS.length} events + dropdown collections`);
   await mongoose.disconnect();
 })().catch((e) => { console.error(e); process.exit(1); });
