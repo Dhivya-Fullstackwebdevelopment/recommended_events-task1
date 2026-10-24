@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #2b1118;
+  --color-maroon: #6b1428;
+  --color-maroon-dark: #451019;
+  --color-sand: #f2e6d0;
+  --color-sand-deep: #e4d0ac;
+  --color-cream: #fffaf0;
+  --color-gold: #b8863a;
+  --color-rose: #b4233e;
+  --color-leaf: #2f7d5b;
+}
+body {
+  @apply font-sans text-ink antialiased;
+  background: radial-gradient(1100px 500px at 85% -10%, #e9cf9f55, transparent), var(--color-sand);
+}
+:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 2px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.skeleton { background: linear-gradient(90deg,#e8d9b9 25%,#f6ecd7 50%,#e8d9b9 75%); backgrou
