@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { registerForEvent } from './api.js';
-import { LEVELS, validateRegistration } from './registration.js';
+import { validateRegistration } from './registration.js';
 
 const input = 'mt-1.5 w-full rounded-xl border border-sand-deep bg-white px-3 py-2.5 text-sm';
 const fmt = (iso) => new Date(iso).toLocaleString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' });
@@ -16,7 +16,7 @@ function Field({ id, label, error, children, hint }) {
   );
 }
 
-export default function RegisterModal({ event, onClose, onDone }) {
+export default function RegisterModal({ event, levels = [], onClose, onDone }) {
   const [form, setForm] = useState({ fullName: '', email: '', phone: '', experience: '', consent: false });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
@@ -34,7 +34,7 @@ export default function RegisterModal({ event, onClose, onDone }) {
 
   async function submit(ev) {
     ev.preventDefault();
-    const errs = validateRegistration(form);
+    const errs = validateRegistration(form, levels);
     if (Object.keys(errs).length) return setErrors(errs);
     setStatus('submitting'); setServerError('');
     try {
@@ -72,7 +72,7 @@ export default function RegisterModal({ event, onClose, onDone }) {
             <Field id="email" label="Email" error={errors.email}><input {...bind('email')} type="email" autoComplete="email" className={input} placeholder="asha@example.com" /></Field>
             <Field id="phone" label="Phone (optional)" error={errors.phone} hint="Used only for event reminders."><input {...bind('phone')} type="tel" autoComplete="tel" className={input} placeholder="+91 98765 43210" /></Field>
             <Field id="experience" label="Experience level" error={errors.experience}>
-              <select {...bind('experience')} className={input}><option value="">Select level</option>{LEVELS.map((l) => <option key={l}>{l}</option>)}</select>
+              <select {...bind('experience')} className={input}><option value="">Select level</option>{levels.map((l) => <option key={l}>{l}</option>)}</select>
             </Field>
             <div>
               <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={form.consent} onChange={set('consent')} className="mt-1 size-4 accent-[#6b1428]" />I agree to receive updates about this event.</label>

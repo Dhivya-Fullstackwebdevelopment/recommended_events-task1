@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getFilters, getRecommendations, USING_MOCK } from './api.js';
+import { getFilters, getRecommendations } from './api.js';
 import RegisterModal from './RegisterModal.jsx';
 import React from 'react'
 
-const PRESETS = ['Next.js', 'React.js', 'Node.js Backend', 'PostgreSQL', 'TypeScript', 'Docker'];
 const DATES = [['all', 'Any time'], ['week', 'This week'], ['month', 'This month'], ['quarter', '3 months']];
 const FORMATS = [['', 'Any'], ['online', 'Online'], ['in-person', 'In person']];
 const INTEREST_RE = /^[\w .+#/-]+$/;
@@ -123,7 +122,7 @@ export default function App() {
   const [draft, setDraft] = useState('');
   const [inputError, setInputError] = useState('');
   const [filters, setFilters] = useState({ technology: '', category: '', format: '', dateRange: 'all' });
-  const [options, setOptions] = useState({ technologies: [], categories: [] });
+  const [options, setOptions] = useState({ technologies: [], categories: [], experienceLevels: [] });
   const [state, setState] = useState({ status: 'loading', events: [], error: null });
   const [retry, setRetry] = useState(0);
   const [target, setTarget] = useState(null);
@@ -152,7 +151,7 @@ export default function App() {
   const set = (k) => (v) => setFilters((f) => ({ ...f, [k]: v }));
   const hasFilters = useMemo(() => filters.technology || filters.category || filters.format || filters.dateRange !== 'all', [filters]);
   const reset = () => setFilters({ technology: '', category: '', format: '', dateRange: 'all' });
-  const custom = interests.filter((i) => !PRESETS.includes(i));
+  const custom = interests.filter((i) => !options.technologies.includes(i));
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6">
@@ -162,7 +161,6 @@ export default function App() {
         <p className="relative font-display text-lg font-bold text-gold">Eventfit</p>
         <h1 className="relative mt-3 max-w-3xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl">Find events that fit the stack you build with.</h1>
         <p className="relative mt-4 max-w-xl text-lg text-sand/85">Pick your interests and we rank upcoming events by skill match, interest match and how soon they start. Every result tells you why.</p>
-        {USING_MOCK && <p className="relative mt-5 inline-block rounded-lg bg-black/25 px-3 py-1.5 text-sm text-sand/80">Demo mode: using the built-in API. Set VITE_API_BASE_URL to use your backend.</p>}
       </header>
 
       <div className="grid gap-8 lg:grid-cols-[340px_1fr]">
@@ -170,7 +168,7 @@ export default function App() {
           <section aria-labelledby="int">
             <h2 id="int" className="font-display text-lg font-bold text-maroon-dark">Your interests</h2>
             <div className="mt-3 flex flex-wrap gap-2">
-              {PRESETS.map((p) => (
+              {options.technologies.map((p) => (
                 <button key={p} type="button" aria-pressed={interests.includes(p)} onClick={() => toggle(p)}
                   className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${interests.includes(p) ? 'border-maroon bg-maroon text-cream' : 'border-sand-deep bg-white hover:border-maroon hover:text-maroon'}`}>{p}</button>
               ))}
@@ -229,7 +227,7 @@ export default function App() {
           )}
         </main>
       </div>
-      {target && <RegisterModal event={target} onClose={() => setTarget(null)} onDone={(id) => setRegistered((r) => [...r, id])} />}
+      {target && <RegisterModal event={target} levels={options.experienceLevels} onClose={() => setTarget(null)} onDone={(id) => setRegistered((r) => [...r, id])} />}
     </div>
   );
 }

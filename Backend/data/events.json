@@ -1,0 +1,156 @@
+[
+  {
+    "id": 1,
+    "title": "React Server Components Deep Dive",
+    "description": "Streaming, suspense and data fetching patterns with modern React.js.",
+    "category": "Workshop",
+    "skills": [
+      "React.js",
+      "TypeScript"
+    ],
+    "startsInDays": 3,
+    "startHour": 18,
+    "isOnline": true,
+    "location": null,
+    "registrationUrl": "https://example.com/register/rsc"
+  },
+  {
+    "id": 2,
+    "title": "Next.js Conf Bengaluru",
+    "description": "App Router, caching and edge rendering from teams shipping Next.js at scale.",
+    "category": "Conference",
+    "skills": [
+      "Next.js",
+      "React.js",
+      "TypeScript"
+    ],
+    "startsInDays": 12,
+    "startHour": 18,
+    "isOnline": false,
+    "location": "Bengaluru, IN",
+    "registrationUrl": "https://example.com/register/nextjs-blr"
+  },
+  {
+    "id": 3,
+    "title": "Node.js Backend Patterns Meetup",
+    "description": "Layered Express APIs, validation, error handling and observability.",
+    "category": "Meetup",
+    "skills": [
+      "Node.js",
+      "Express"
+    ],
+    "startsInDays": 6,
+    "startHour": 18,
+    "isOnline": false,
+    "location": "Coimbatore, IN",
+    "registrationUrl": "https://example.com/register/node-meetup"
+  },
+  {
+    "id": 4,
+    "title": "PostgreSQL Indexing Clinic",
+    "description": "Read query plans, fix slow queries and design indexes that last.",
+    "category": "Workshop",
+    "skills": [
+      "PostgreSQL"
+    ],
+    "startsInDays": 9,
+    "startHour": 18,
+    "isOnline": true,
+    "location": null,
+    "registrationUrl": "https://example.com/register/pg-index"
+  },
+  {
+    "id": 5,
+    "title": "NestJS + PostgreSQL in Production",
+    "description": "Modules, migrations and testing for a real NestJS service.",
+    "category": "Webinar",
+    "skills": [
+      "NestJS",
+      "Node.js",
+      "PostgreSQL"
+    ],
+    "startsInDays": 20,
+    "startHour": 18,
+    "isOnline": true,
+    "location": null,
+    "registrationUrl": "https://example.com/register/nest-pg"
+  },
+  {
+    "id": 6,
+    "title": "Full-Stack Hack Weekend",
+    "description": "48 hours to ship a Next.js, Node.js and PostgreSQL product with mentors.",
+    "category": "Hackathon",
+    "skills": [
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "React.js"
+    ],
+    "startsInDays": 28,
+    "startHour": 18,
+    "isOnline": false,
+    "location": "Chennai, IN",
+    "registrationUrl": "https://example.com/register/hack-weekend"
+  },
+  {
+    "id": 7,
+    "title": "Tailwind CSS Design Systems",
+    "description": "Build a themeable component library on Tailwind CSS and React.js.",
+    "category": "Webinar",
+    "skills": [
+      "Tailwind CSS",
+      "React.js"
+    ],
+    "startsInDays": 15,
+    "startHour": 18,
+    "isOnline": true,
+    "location": null,
+    "registrationUrl": "https://example.com/register/tailwind-ds"
+  },
+  {
+    "id": 8,
+    "title": "Docker for Backend Engineers",
+    "description": "Containerise Node.js services and run PostgreSQL locally with Compose.",
+    "category": "Workshop",
+    "skills": [
+      "Docker",
+      "Node.js",
+      "PostgreSQL"
+    ],
+    "startsInDays": 40,
+    "startHour": 18,
+    "isOnline": true,
+    "location": null,
+    "registrationUrl": "https://example.com/register/docker-be"
+  },
+  {
+    "id": 9,
+    "title": "React.js Testing Night",
+    "description": "Testing Library, mocks and confidence-first frontend testing.",
+    "category": "Meetup",
+    "skills": [
+      "React.js",
+      "TypeScript"
+    ],
+    "startsInDays": 2,
+    "startHour": 18,
+    "isOnline": false,
+    "location": "Coimbatore, IN",
+    "registrationUrl": "https://example.com/register/react-testing"
+  },
+  {
+    "id": 10,
+    "title": "API Security Summit",
+    "description": "Authentication, input validation and secrets handling for Node.js APIs.",
+    "category": "Conference",
+    "skills": [
+      "Node.js",
+      "Express"
+    ],
+    "startsInDays": 75,
+    "startHour": 18,
+    "isOnline": false,
+    "location": "Hyderabad, IN",
+    "registrationUrl": "https://example.com/register/api-sec"
+  }
+]

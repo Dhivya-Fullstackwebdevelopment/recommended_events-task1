@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Conference"
+  },
+  {
+    "id": 2,
+    "name": "Hackathon"
+  },
+  {
+    "id": 3,
+    "name": "Meetup"
+  },
+  {
+    "id": 4,
+    "name": "Webinar"
+  },
+  {
+    "id": 5,
+    "name": "Workshop"
+  }
+]
