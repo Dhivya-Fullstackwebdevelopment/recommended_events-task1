@@ -1,26 +1,17 @@
-const express = require("express");
-const mongoose = require("mongoose");
 require("dotenv").config();
-
-const app = express();
-
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Recommended Events Backend is running!");
-});
+const app = require("./src/app");
+const connectDB = require("./src/config/db");
 
 async function startServer() {
   try {
-    await mongoose.connect(process.env.MONGO_URL);
-
+    await connectDB(process.env.MONGO_URL);
     console.log("MongoDB connected successfully!");
 
-    app.listen(process.env.PORT || 8000, () => {
-      console.log(`Server running on port ${process.env.PORT || 8000}`);
-    });
+    const port = process.env.PORT || 8000;
+    app.listen(port, () => console.log(`Server running on port ${port}`));
   } catch (error) {
     console.error("MongoDB connection failed:", error.message);
+    process.exit(1);
   }
 }
 

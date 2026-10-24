@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mockRequest, score, EVENTS } from './mockApi.js';
+import { mockRequest, mockRegister, score, EVENTS } from './mockApi.js';
 
 describe('recommendations', () => {
   it('ranks React.js events first when React.js is selected', async () => {
@@ -16,5 +16,17 @@ describe('recommendations', () => {
   it('returns an empty list for impossible combinations', async () => {
     const r = await mockRequest('/api/events/recommendations', { technology: 'Docker', format: 'in-person' });
     expect(r.data).toEqual([]);
+  });
+});
+
+describe('registration', () => {
+  const ok = { fullName: 'Asha Kumar', email: 'asha@example.com', phone: '', experience: 'Beginner', consent: true };
+  it('registers once and rejects a duplicate email', async () => {
+    const r = await mockRegister(1, ok);
+    expect(r.data.email).toBe('asha@example.com');
+    await expect(mockRegister(1, ok)).rejects.toThrow('already registered');
+  });
+  it('rejects invalid fields', async () => {
+    await expect(mockRegister(2, { ...ok, email: 'nope' })).rejects.toThrow('invalid');
   });
 });

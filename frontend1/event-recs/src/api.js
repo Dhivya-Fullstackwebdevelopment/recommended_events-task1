@@ -1,4 +1,4 @@
-import { mockRequest } from './mockApi.js';
+import { mockRequest, mockRegister } from './mockApi.js';
 
 const BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 export const USING_MOCK = !BASE;
@@ -21,3 +21,14 @@ async function request(path, params = {}, signal) {
 export const getFilters = (signal) => request('/api/filters', {}, signal);
 export const getRecommendations = (f, signal) =>
   request('/api/events/recommendations', { ...f, interests: f.interests.join(',') }, signal);
+
+export async function registerForEvent(eventId, payload) {
+  if (USING_MOCK) return mockRegister(eventId, payload);
+  let res;
+  try {
+    res = await fetch(`${BASE}/api/events/${eventId}/registrations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  } catch { throw new ApiError('Cannot reach the server. Check your connection and try again.'); }
+  const body = await res.json().catch(() => null);
+  if (!res.ok) throw new ApiError(body?.error?.message || 'Registration failed. Please try again.', res.status, body?.error?.details || []);
+  return body;
+}

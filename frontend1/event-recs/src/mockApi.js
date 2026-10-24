@@ -2,6 +2,7 @@
 //   GET /api/filters
 //   GET /api/events/recommendations?interests=a,b&technology=&category=&format=&dateRange=
 import { ApiError } from './api.js';
+import { validateRegistration } from './registration.js';
 
 const at = (days, hour = 18) => { const d = new Date(); d.setDate(d.getDate() + days); d.setHours(hour, 0, 0, 0); return d.toISOString(); };
 const E = (id, title, description, category, skills, days, isOnline, location, slug) => ({
@@ -75,4 +76,17 @@ export async function mockRequest(path, params = {}) {
     .map((e) => ({ ...e, ...score(e, interests, now) }))
     .sort((a, b) => b.score - a.score || new Date(a.startsAt) - new Date(b.startsAt));
   return { data: rows, meta: { total: rows.length } };
+}
+
+const REGS = [];
+export async function mockRegister(eventId, b) {
+  await new Promise((r) => setTimeout(r, 700));
+  if (!EVENTS.some((e) => e.id === Number(eventId))) throw new ApiError('Event not found.', 404);
+  const errs = validateRegistration(b);
+  if (Object.keys(errs).length) throw new ApiError('Some fields are invalid.', 400, Object.entries(errs).map(([k, m]) => `${k}: ${m}`));
+  const email = b.email.trim().toLowerCase();
+  if (REGS.some((r) => r.eventId === Number(eventId) && r.email === email)) throw new ApiError('This email is already registered for this event.', 409);
+  const row = { id: REGS.length + 1, eventId: Number(eventId), fullName: b.fullName.trim(), email };
+  REGS.push(row);
+  return { data: row };
 }

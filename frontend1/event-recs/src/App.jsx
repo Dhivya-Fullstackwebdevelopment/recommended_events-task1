@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getFilters, getRecommendations, USING_MOCK } from './api.js';
+import RegisterModal from './RegisterModal.jsx';
+import React from 'react'
 
 const PRESETS = ['Next.js', 'React.js', 'Node.js Backend', 'PostgreSQL', 'TypeScript', 'Docker'];
 const DATES = [['all', 'Any time'], ['week', 'This week'], ['month', 'This month'], ['quarter', '3 months']];
@@ -50,7 +52,7 @@ function MatchRing({ pct }) {
   );
 }
 
-function EventCard({ e, rank, hasInterests }) {
+function EventCard({ e, rank, hasInterests, registered, onRegister }) {
   const pct = Math.min(100, Math.round((e.score / e.maxScore) * 100));
   const best = hasInterests && rank === 1;
   return (
@@ -84,11 +86,18 @@ function EventCard({ e, rank, hasInterests }) {
             <p className="font-semibold">{fmtDate(e.startsAt)}</p>
             <p className={`font-semibold ${e.isOnline ? 'text-leaf' : 'text-gold'}`}>{e.isOnline ? 'Online' : `In person: ${e.location}`}</p>
           </div>
-          <a href={e.registrationUrl} target="_blank" rel="noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-maroon px-7 py-3 text-base font-bold text-cream shadow-[0_8px_20px_-8px_rgba(107,20,40,.8)] ring-2 ring-gold/70 transition hover:bg-maroon-dark hover:ring-gold sm:min-w-44">
-            Register now
-            <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </a>
+          <div className="flex flex-col items-stretch gap-1.5 sm:items-end">
+            {registered ? (
+              <span className="inline-flex items-center justify-center gap-2 rounded-xl bg-leaf px-7 py-3 text-base font-bold text-white sm:min-w-44">Registered ✓</span>
+            ) : (
+              <button type="button" onClick={() => onRegister(e)}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-maroon px-7 py-3 text-base font-bold text-cream shadow-[0_8px_20px_-8px_rgba(107,20,40,.8)] ring-2 ring-gold/70 transition hover:bg-maroon-dark hover:ring-gold sm:min-w-44">
+                Register now
+                <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+            )}
+            <a href={e.registrationUrl} target="_blank" rel="noreferrer" className="text-center text-xs font-semibold text-maroon underline sm:text-right">Event page</a>
+          </div>
         </div>
       </div>
     </article>
@@ -117,6 +126,8 @@ export default function App() {
   const [options, setOptions] = useState({ technologies: [], categories: [] });
   const [state, setState] = useState({ status: 'loading', events: [], error: null });
   const [retry, setRetry] = useState(0);
+  const [target, setTarget] = useState(null);
+  const [registered, setRegistered] = useState([]);
 
   useEffect(() => { getFilters().then(setOptions).catch(() => {}); }, []);
 
@@ -150,7 +161,7 @@ export default function App() {
         <div aria-hidden="true" className="absolute -bottom-24 right-24 size-56 rounded-full border-[18px] border-sand/10" />
         <p className="relative font-display text-lg font-bold text-gold">Eventfit</p>
         <h1 className="relative mt-3 max-w-3xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl">Find events that fit the stack you build with.</h1>
-        
+        <p className="relative mt-4 max-w-xl text-lg text-sand/85">Pick your interests and we rank upcoming events by skill match, interest match and how soon they start. Every result tells you why.</p>
         {USING_MOCK && <p className="relative mt-5 inline-block rounded-lg bg-black/25 px-3 py-1.5 text-sm text-sand/80">Demo mode: using the built-in API. Set VITE_API_BASE_URL to use your backend.</p>}
       </header>
 
@@ -213,11 +224,12 @@ export default function App() {
           {state.status === 'ready' && state.events.length > 0 && (
             <div className="space-y-5">
               {interests.length === 0 && <p className="rounded-xl bg-cream p-3 text-sm">No interests selected, so events are sorted by start date. Pick an interest to personalise the ranking.</p>}
-              {state.events.map((e, i) => <EventCard key={e.id} e={e} rank={i + 1} hasInterests={interests.length > 0} />)}
+              {state.events.map((e, i) => <EventCard key={e.id} e={e} rank={i + 1} hasInterests={interests.length > 0} registered={registered.includes(e.id)} onRegister={setTarget} />)}
             </div>
           )}
         </main>
       </div>
+      {target && <RegisterModal event={target} onClose={() => setTarget(null)} onDone={(id) => setRegistered((r) => [...r, id])} />}
     </div>
   );
 }
